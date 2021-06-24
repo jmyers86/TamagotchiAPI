@@ -165,6 +165,57 @@ namespace TamagotchiAPI.Controllers
             return Ok(pet);
         }
 
+        [HttpPost("{id}/feedings")]
+        public async Task<ActionResult<Pet>> PostPetFeeding(int id)
+        {
+            var pet = await _context.Pets.FindAsync(id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            pet.HappinessLevel += 3;
+            pet.HungerLevel -= 3;
+            Feeding newFeed = new Feeding
+            {
+                When = DateTime.Now,
+                PetId = id
+            };
+
+
+            _context.Feedings.Add(newFeed);
+            await _context.SaveChangesAsync();
+
+
+            return Ok(pet);
+        }
+
+        [HttpPost("{id}/scoldings")]
+        public async Task<ActionResult<Pet>> PostPetScolding(int id)
+        {
+            var pet = await _context.Pets.FindAsync(id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            pet.HappinessLevel -= 5;
+
+            Scolding newScold = new Scolding
+            {
+                When = DateTime.Now,
+                PetId = id
+            };
+
+
+            _context.Scoldings.Add(newScold);
+            await _context.SaveChangesAsync();
+
+
+            return Ok(pet);
+        }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePet(int id)
