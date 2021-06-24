@@ -33,9 +33,16 @@ namespace TamagotchiAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pet>>> GetPets()
         {
+
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
-            return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            foreach (var pet in _context.Pets)
+            {
+                pet.UpdatePet();
+
+            }
+            await _context.SaveChangesAsync();
+            return await _context.Pets.OrderBy(row => row.Id).Where(pet => !pet.IsDead).ToListAsync();
         }
 
         // GET: api/Pet/5
@@ -56,7 +63,10 @@ namespace TamagotchiAPI.Controllers
                 // Return a `404` response to the client indicating we could not find a pet with this id
                 return NotFound();
             }
-
+            if (pet.IsDead)
+            {
+                return Ok($"{pet.Name} is dead! :C");
+            }
             // Return the pet as a JSON object.
             return pet;
         }
@@ -149,6 +159,7 @@ namespace TamagotchiAPI.Controllers
                 return NotFound();
             }
 
+            pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel += 5;
             pet.HungerLevel += 3;
             Playtime newPlay = new Playtime
@@ -174,6 +185,7 @@ namespace TamagotchiAPI.Controllers
                 return NotFound();
             }
 
+            pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel += 3;
             pet.HungerLevel -= 3;
             Feeding newFeed = new Feeding
@@ -199,6 +211,7 @@ namespace TamagotchiAPI.Controllers
                 return NotFound();
             }
 
+            pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel -= 5;
 
             Scolding newScold = new Scolding
@@ -243,5 +256,6 @@ namespace TamagotchiAPI.Controllers
         {
             return _context.Pets.Any(pet => pet.Id == id);
         }
+
     }
 }
