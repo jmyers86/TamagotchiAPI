@@ -158,7 +158,10 @@ namespace TamagotchiAPI.Controllers
             {
                 return NotFound();
             }
-
+            if (pet.IsDead)
+            {
+                return Ok($"{pet.Name} is dead! :C");
+            }
             pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel += 5;
             pet.HungerLevel += 3;
@@ -184,7 +187,10 @@ namespace TamagotchiAPI.Controllers
             {
                 return NotFound();
             }
-
+            if (pet.IsDead)
+            {
+                return Ok($"{pet.Name} is dead! :C");
+            }
             pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel += 3;
             pet.HungerLevel -= 3;
@@ -210,7 +216,10 @@ namespace TamagotchiAPI.Controllers
             {
                 return NotFound();
             }
-
+            if (pet.IsDead)
+            {
+                return Ok($"{pet.Name} is dead! :C");
+            }
             pet.LastInteractedWithDate = DateTime.Now;
             pet.HappinessLevel -= 5;
 
