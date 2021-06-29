@@ -31,10 +31,10 @@ namespace TamagotchiAPI.Models
         }
         public void UpdateHungerAndHappiness()
         {
-            if ((this.LastTimeFed - DateTime.Now).TotalMinutes > 1)
+            if ((DateTime.Now - this.LastTimeFed).TotalDays > 1)
             {
-                this.HungerLevel = HungerLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalMinutes);
-                this.HappinessLevel = HappinessLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalMinutes);
+                this.HungerLevel = HungerLevel + Convert.ToInt32((DateTime.Now - this.LastTimeFed).TotalDays);
+                this.HappinessLevel = HappinessLevel - Convert.ToInt32((DateTime.Now - this.LastTimeFed).TotalDays);
             }
 
             // this.HungerLevel = HungerLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalDays);
