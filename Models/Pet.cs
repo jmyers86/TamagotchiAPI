@@ -1,4 +1,5 @@
 using System;
+using System.Timers;
 
 namespace TamagotchiAPI.Models
 {
@@ -15,6 +16,8 @@ namespace TamagotchiAPI.Models
 
         public DateTime LastInteractedWithDate { get; set; } = DateTime.Now;
 
+        public DateTime LastTimeFed { get; set; } = DateTime.Now;
+
         public bool IsDead { get; set; } = false;
 
 
@@ -24,6 +27,19 @@ namespace TamagotchiAPI.Models
             {
                 this.IsDead = true;
             }
+
+        }
+        public void UpdateHungerAndHappiness()
+        {
+            if ((this.LastTimeFed - DateTime.Now).TotalMinutes > 1)
+            {
+                this.HungerLevel = HungerLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalMinutes);
+                this.HappinessLevel = HappinessLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalMinutes);
+            }
+
+            // this.HungerLevel = HungerLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalDays);
+            // this.HappinessLevel = HappinessLevel - Convert.ToInt32((this.LastTimeFed - DateTime.Now).TotalDays);
+
 
         }
     }

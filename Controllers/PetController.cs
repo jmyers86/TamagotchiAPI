@@ -39,6 +39,7 @@ namespace TamagotchiAPI.Controllers
             foreach (var pet in _context.Pets)
             {
                 pet.UpdatePet();
+                pet.UpdateHungerAndHappiness();
 
             }
             await _context.SaveChangesAsync();
@@ -56,6 +57,8 @@ namespace TamagotchiAPI.Controllers
         {
             // Find the pet in the database using `FindAsync` to look it up by id
             var pet = await _context.Pets.FindAsync(id);
+            pet.UpdatePet();
+            pet.UpdateHungerAndHappiness();
 
             // If we didn't find anything, we receive a `null` in return
             if (pet == null)
@@ -67,6 +70,7 @@ namespace TamagotchiAPI.Controllers
             {
                 return Ok($"{pet.Name} is dead! :C");
             }
+            await _context.SaveChangesAsync();
             // Return the pet as a JSON object.
             return pet;
         }
@@ -117,7 +121,8 @@ namespace TamagotchiAPI.Controllers
                     throw;
                 }
             }
-
+            pet.UpdatePet();
+            pet.UpdateHungerAndHappiness();
             // Return a copy of the updated data
             return Ok(pet);
         }
@@ -192,6 +197,7 @@ namespace TamagotchiAPI.Controllers
                 return Ok($"{pet.Name} is dead! :C");
             }
             pet.LastInteractedWithDate = DateTime.Now;
+            pet.LastTimeFed = DateTime.Now;
             pet.HappinessLevel += 3;
             pet.HungerLevel -= 3;
             Feeding newFeed = new Feeding
